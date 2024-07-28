@@ -3,12 +3,22 @@
 
 {% block content %}
 <div class="supplier-detail-card">
-    <h1>{{ supplier.name }}</h1>
-    <div class="supplier-info">
-        <p><strong>Email:</strong> {{ supplier.email }}</p>
-        <p><strong>Website:</strong> <a href="{{ supplier.website }}" target="_blank">{{ supplier.website }}</a></p>
-        <p><strong>Phone Number:</strong> {{ supplier.phone_number }}</p>
-    </div>
+    <h2>{{ supplier.name }}</h2>
+    <table class="supplier-info">
+        <tr>
+            <td><strong>Email:</strong></td>
+            <td>{{ supplier.email }}</td>
+        </tr>
+        <tr>
+            <td><strong>Website:</strong></td>
+            <td><a href="{{ supplier.website }}" target="_blank">{{ supplier.website }}</a></td>
+        </tr>
+        <tr>
+            <td><strong>Phone Number:</strong></td>
+            <td>{{ supplier.phone_number }}</td>
+        </tr>
+    </table>
+    <br>
     <h3>Products</h3>
     <div class="product-cards">
         {% if products %}
@@ -27,6 +37,8 @@
             <p>No products available for this supplier.</p>
         {% endif %}
     </div>
-    <a class="btn btn-secondary" href="{% url 'supplier_list' %}">Back to Supplier List</a>
+    <div style="margin-top: 20px;">
+        <a href="{% url 'supplier_list' %}" style="color: #007bff; text-decoration: none; font-size: 16px;">Back to Supplier List</a>
+    </div>
 </div>
 {% endblock %}
