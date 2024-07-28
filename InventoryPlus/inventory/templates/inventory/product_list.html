@@ -1,13 +1,12 @@
 {% extends 'base.html' %}
 
-{% load static %}  <!-- Add this line to load static files -->
+{% load static %}  
 
 {% block title %}Product List{% endblock %}
 
 {% block content %}
 <h2>Product List</h2>
 
-<!-- Search Form -->
 <div class="search-container">
     <form method="get" action="{% url 'product_search' %}">
         <input type="text" name="q" placeholder="Search products by name, category, or supplier" value="{{ request.GET.q }}" class="search-input">
@@ -15,12 +14,10 @@
     </form>
 </div>
 
-<!-- Add Product Button -->
 <div class="product-header">
     <a href="{% url 'product_create' %}" class="btn">Add Product</a>
 </div>
 
-<!-- Product Cards -->
 <div class="product-cards">
     {% if products %}
         {% for product in products %}
