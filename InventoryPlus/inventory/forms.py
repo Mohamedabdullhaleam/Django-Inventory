@@ -20,3 +20,9 @@ class StockForm(forms.ModelForm):
     class Meta:
         model = Stock
         fields = ['product', 'quantity']
+
+class StockUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Stock
+        fields = ['quantity']
+

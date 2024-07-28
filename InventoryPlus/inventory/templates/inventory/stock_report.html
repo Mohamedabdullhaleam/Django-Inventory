@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Stock Report{% endblock %}
+{% block content %}
+<div class="content-container">
+    <h2>Stock Report</h2>
+    <table class="stock-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Stock Level</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.get_stock_level }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

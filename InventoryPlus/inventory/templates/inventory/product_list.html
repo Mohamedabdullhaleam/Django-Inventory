@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load static %}  
+{% load static %}
 
 {% block title %}Product List{% endblock %}
 
@@ -10,7 +10,7 @@
 <div class="search-container">
     <form method="get" action="{% url 'product_search' %}">
         <input type="text" name="q" placeholder="Search products by name, category, or supplier" value="{{ request.GET.q }}" class="search-input">
-        <button type="submit" class="search-btn">Search</button>
+        <button type="submit" class="btn search-btn">Search</button>
     </form>
 </div>
 
@@ -30,6 +30,7 @@
             <h3>{{ product.name }}</h3>
             <p>{{ product.description }}</p>
             <p>Price: ${{ product.price }}</p>
+            <p>Stock Status: {{ product.stock_status }}</p>  
             <a href="{% url 'product_detail' product.pk %}" class="btn">View Details</a>
         </div>
         {% endfor %}

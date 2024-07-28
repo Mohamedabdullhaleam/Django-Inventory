@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import Product, Category, Supplier, Stock
-from .forms import ProductForm, CategoryForm, SupplierForm, StockForm
+from .forms import ProductForm, CategoryForm, SupplierForm, StockForm, StockUpdateForm
 
 # Product Views
 def product_list(request):
@@ -9,12 +9,12 @@ def product_list(request):
 
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    stock_entries = product.stock_entries.all()
-    return render(request, 'inventory/product_detail.html', {'product': product, 'stock_entries': stock_entries})
+    latest_stock_entry = product.stock_entries.order_by('-date_updated').first()
+    return render(request, 'inventory/product_detail.html', {'product': product, 'latest_stock_entry': latest_stock_entry})
 
 def product_create(request):
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)  # Handle files
+        form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('product_list')
@@ -25,7 +25,7 @@ def product_create(request):
 def product_edit(request, pk):
     product = get_object_or_404(Product, pk=pk)
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES, instance=product)  # Handle files
+        form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
             form.save()
             return redirect('product_detail', pk=product.pk)
@@ -43,7 +43,6 @@ def product_delete(request, pk):
 def product_search(request):
     query = request.GET.get('q', '')
     if query:
-        # Search for products by name, category, or supplier
         products = Product.objects.filter(
             name__icontains=query
         ) | Product.objects.filter(
@@ -53,7 +52,6 @@ def product_search(request):
         )
     else:
         products = Product.objects.all()
-
     return render(request, 'inventory/product_list.html', {'products': products})
 
 # Category Views
@@ -131,20 +129,27 @@ def supplier_inventory(request, supplier_id):
     supplier = get_object_or_404(Supplier, pk=supplier_id)
     products = Product.objects.filter(suppliers=supplier)
     return render(request, 'inventory/supplier_inventory.html', {'supplier': supplier, 'products': products})
+
 # Stock Views
 def stock_update(request, pk):
     product = get_object_or_404(Product, pk=pk)
     if request.method == 'POST':
-        form = StockForm(request.POST)
+        form = StockUpdateForm(request.POST)
         if form.is_valid():
-            stock = form.save(commit=False)
-            stock.product = product
-            stock.save()
+            stock_entry = form.save(commit=False)
+            stock_entry.product = product
+            stock_entry.save()
             return redirect('product_detail', pk=product.pk)
     else:
-        form = StockForm()
-    return render(request, 'inventory/stock_form.html', {'form': form, 'product': product})
+        form = StockUpdateForm()
+    return render(request, 'inventory/stock_update.html', {'form': form, 'product': product})
 
+# View to show stock status
 def stock_status(request):
     products = Product.objects.all()
     return render(request, 'inventory/stock_status.html', {'products': products})
+
+# View to generate stock reports
+def stock_report(request):
+    products = Product.objects.all()
+    return render(request, 'inventory/stock_report.html', {'products': products})

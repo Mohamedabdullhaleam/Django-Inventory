@@ -8,6 +8,7 @@
     <title>{% block title %}My Project{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% block extra_css %}{% endblock %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <header>
@@ -17,6 +18,13 @@
                 <li><a href="{% url 'product_list' %}">Products</a></li>
                 <li><a href="{% url 'category_list' %}">Categories</a></li>
                 <li><a href="{% url 'supplier_list' %}">Suppliers</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn">Stock <i class="fa fa-caret-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="{% url 'stock_status' %}">Stock Status</a>
+                        <a href="{% url 'stock_report' %}">Stock Reports</a>
+                    </div>
+                </li>
             </ul>
         </nav>
     </header>
@@ -31,7 +39,6 @@
         <p>&copy; 2024 My Project. All rights reserved.</p>
     </footer>
     
-    <script src="{% static 'js/script.js' %}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
