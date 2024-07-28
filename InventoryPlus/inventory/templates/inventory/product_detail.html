@@ -1,8 +1,13 @@
+<!-- inventory/templates/inventory/product_detail.html -->
 {% extends "base.html" %}
 
 {% block content %}
+<!-- Back to Product List button moved outside of the product-detail-card -->
+<a class="btn btn-secondary back-to-list-btn" href="{% url 'product_list' %}" title="Back to Product List">
+    <i class="fas fa-arrow-left"></i> Back to List
+</a>
+
 <div class="product-detail-card">
-    <!-- Product Image -->
     <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
 
     <h1>{{ product.name }}</h1>
@@ -11,27 +16,35 @@
     <p class="product-category">Category: {{ product.category.name }}</p>
     <p class="product-suppliers">Suppliers: 
         {% for supplier in product.suppliers.all %}
-            {{ supplier.name }}{% if not forloop.last %}, {% endif %}
+            <a href="{% url 'supplier_detail' supplier.pk %}">{{ supplier.name }}</a>{% if not forloop.last %}, {% endif %}
         {% endfor %}
     </p>
+    <p class="product-stock">Stock Status: 
+        {% if product.stock_status == 'In Stock' %}
+        <span class="badge badge-success">{{ product.stock_status }}</span>
+        {% elif product.stock_status == 'Low Stock' %}
+        <span class="badge badge-warning">{{ product.stock_status }}</span>
+        {% else %}
+        <span class="badge badge-danger">{{ product.stock_status }}</span>
+        {% endif %}
+    </p>
 
-    <h2>Stock Entries</h2>
-    <ul class="stock-list">
-        {% for stock in stock_entries %}
-        <li>{{ stock.quantity }} units (Last updated: {{ stock.date_updated }})</li>
-        {% empty %}
-        <li>No stock entries available.</li>
-        {% endfor %}
-    </ul>
+    <h3>Latest Stock Entry</h3>
+    {% if latest_stock_entry %}
+    <p>{{ latest_stock_entry.quantity }} units (Last updated: {{ latest_stock_entry.date_updated }})</p>
+    <h3>Total Stock of this product</h3>
+    <p>{{ product.get_stock_level }} units</p>
+    {% else %}
+    <p>No stock entries available.</p>
+    {% endif %}
 
     <div class="product-actions">
         <a class="btn btn-success" href="{% url 'stock_update' pk=product.pk %}">Update Stock</a>
         <a class="btn btn-info" href="{% url 'product_edit' pk=product.pk %}">Edit Product</a>
-        <form method="POST" action="{% url 'product_delete' pk=product.pk %}" class="delete-form">
+        <form method="POST" action="{% url 'product_delete' pk=product.pk %}" class="delete-form" style="display:inline;">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger">Delete Product</button>
         </form>
-        <a class="btn btn-secondary" href="{% url 'product_list' %}">Back to Product List</a>
     </div>
 </div>
 {% endblock %}

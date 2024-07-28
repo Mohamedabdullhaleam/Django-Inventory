@@ -1,15 +1,32 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
-<h1>{{ supplier.name }}</h1>
-<img src="{{ supplier.logo.url }}" alt="{{ supplier.name }}">
-<p>Email: {{ supplier.email }}</p>
-<p>Website: <a href="{{ supplier.website }}" target="_blank">{{ supplier.website }}</a></p>
-<p>Phone: {{ supplier.phone_number }}</p>
-<h2>Products Supplied</h2>
-<ul>
-    {% for product in products %}
-    <li>{{ product.name }}</li>
-    {% endfor %}
-</ul>
-<a href="{% url 'supplier_list' %}" class="btn btn-secondary">Back to Supplier List</a>
+<div class="supplier-detail-card">
+    <h1>{{ supplier.name }}</h1>
+    <div class="supplier-info">
+        <p><strong>Email:</strong> {{ supplier.email }}</p>
+        <p><strong>Website:</strong> <a href="{{ supplier.website }}" target="_blank">{{ supplier.website }}</a></p>
+        <p><strong>Phone Number:</strong> {{ supplier.phone_number }}</p>
+    </div>
+    <h3>Products</h3>
+    <div class="product-cards">
+        {% if products %}
+            {% for product in products %}
+            <div class="product-card">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                {% else %}
+                <img src="{% static 'images/default-product.png' %}" alt="Default Image" class="product-image">
+                {% endif %}
+                <h4>{{ product.name }}</h4>
+                <p>{{ product.description }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No products available for this supplier.</p>
+        {% endif %}
+    </div>
+    <a class="btn btn-secondary" href="{% url 'supplier_list' %}">Back to Supplier List</a>
+</div>
 {% endblock %}

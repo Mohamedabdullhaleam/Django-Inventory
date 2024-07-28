@@ -1,4 +1,3 @@
-<!-- inventory/templates/suppliers/supplier_list.html -->
 {% extends "base.html" %}
 {% block content %}
 <h1>Supplier List</h1>
@@ -8,6 +7,7 @@
     <li>
         <a href="{% url 'supplier_detail' supplier.pk %}">{{ supplier.name }}</a>
         <a href="{% url 'supplier_edit' supplier.pk %}" class="btn btn-info">Edit</a>
+        <a href="{% url 'supplier_inventory' supplier.pk %}" class="btn btn-success">View Inventory</a>
         <form method="POST" action="{% url 'supplier_delete' supplier.pk %}" style="display:inline;">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger">Delete</button>
