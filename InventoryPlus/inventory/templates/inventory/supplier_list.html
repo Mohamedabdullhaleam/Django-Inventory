@@ -1,18 +1,82 @@
-{% extends "base.html" %}
-{% block content %}
-<h1>Supplier List</h1>
-<a href="{% url 'supplier_create' %}" class="btn btn-primary">Add Supplier</a>
-<ul>
+{% extends "base.html" %} {% block content %}
+<h2>Supplier List</h2>
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
     {% for supplier in suppliers %}
-    <li>
-        <a href="{% url 'supplier_detail' supplier.pk %}">{{ supplier.name }}</a>
-        <a href="{% url 'supplier_edit' supplier.pk %}" class="btn btn-info">Edit</a>
-        <a href="{% url 'supplier_inventory' supplier.pk %}" class="btn btn-success">View Inventory</a>
-        <form method="POST" action="{% url 'supplier_delete' supplier.pk %}" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Delete</button>
+    <tr>
+      <td>
+        <a
+          href="{% url 'supplier_detail' supplier.pk %}"
+          style="text-decoration: none; color: #007bff"
+          >{{ supplier.name }}</a
+        >
+      </td>
+      <td>
+        <div
+          style="
+            background-color: #007bff;
+            padding: 4px;
+            display: inline-block;
+            border-radius: 5px;
+            margin-right: 5px;
+          "
+        >
+          <a
+            href="{% url 'supplier_edit' supplier.pk %}"
+            class="btn"
+            style="color: white; text-decoration: none"
+            >Edit</a
+          >
+        </div>
+
+        <div
+          style="
+            background-color: gray;
+            padding: 4px;
+            display: inline-block;
+            border-radius: 5px;
+            margin-right: 5px;
+          "
+        >
+          <a
+            href="{% url 'supplier_inventory' supplier.pk %}"
+            class="btn btn-hover"
+            style="color: white; text-decoration: none"
+            >View Inventory</a
+          >
+        </div>
+
+        <form
+          method="POST"
+          action="{% url 'supplier_delete' supplier.pk %}"
+          style="display: inline"
+        >
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger btn-sm">Delete</button>
         </form>
-    </li>
+      </td>
+    </tr>
     {% endfor %}
-</ul>
+  </tbody>
+</table>
+
+<a
+  href="{% url 'supplier_create' %}"
+  style="
+    background-color: green;
+    color: white;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 5px;
+  "
+>
+  Add Supplier
+</a>
+
 {% endblock %}

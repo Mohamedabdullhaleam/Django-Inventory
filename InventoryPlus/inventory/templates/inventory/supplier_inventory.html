@@ -1,14 +1,29 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<h1>Inventory for {{ supplier.name }}</h1>
-<a href="{% url 'supplier_list' %}" class="btn btn-secondary">Back to Suppliers</a>
-<div class="supplier-details">
-    <p><strong>Contact Information:</strong> {{ supplier.contact_information }}</p>
-    <p><strong>Email:</strong> {{ supplier.email }}</p>
-    <p><strong>Website:</strong> <a href="{{ supplier.website }}">{{ supplier.website }}</a></p>
-    <p><strong>Phone Number:</strong> {{ supplier.phone_number }}</p>
-</div>
+<h2>Inventory for {{ supplier.name }}</h2>
+<table class="supplier-details">
+    <tbody>
+        <tr>
+            <td><strong>Contact Information:</strong></td>
+            <td>{{ supplier.contact_information }}</td>
+        </tr>
+        <tr>
+            <td><strong>Email:</strong></td>
+            <td>{{ supplier.email }}</td>
+        </tr>
+        <tr>
+            <td><strong>Website:</strong></td>
+            <td><a href="{{ supplier.website }}">{{ supplier.website }}</a></td>
+        </tr>
+        <tr>
+            <td><strong>Phone Number:</strong></td>
+            <td>{{ supplier.phone_number }}</td>
+        </tr>
+    </tbody>
+</table>
+<br>
+
 <h3>Products</h3>
 <div class="product-cards">
     {% if products %}
@@ -26,5 +41,10 @@
     {% else %}
         <p>No products found for this supplier.</p>
     {% endif %}
+</div>
+
+
+<div style="margin-top: 20px;">
+    <a href="{% url 'supplier_list' %}" style="color: #007bff; text-decoration: none; font-size: 16px;">Back to Suppliers</a>
 </div>
 {% endblock %}

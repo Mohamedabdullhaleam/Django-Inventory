@@ -14,9 +14,7 @@
     </form>
 </div>
 
-<div class="product-header">
-    <a href="{% url 'product_create' %}" class="btn">Add Product</a>
-</div>
+
 
 <div class="product-cards">
     {% if products %}
@@ -37,5 +35,9 @@
     {% else %}
         <p>No products found.</p>
     {% endif %}
+</div>
+<br></br>
+<div class="product-header">
+    <a href="{% url 'product_create' %}" class="btn">Add Product</a>
 </div>
 {% endblock %}
