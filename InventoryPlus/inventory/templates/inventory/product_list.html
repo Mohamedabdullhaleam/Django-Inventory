@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% load static %}  <!-- Add this line to load static files -->
+
+{% block title %}Product List{% endblock %}
+
+{% block content %}
+<h2>Product List</h2>
+
+<!-- Search Form -->
+<div class="search-container">
+    <form method="get" action="{% url 'product_search' %}">
+        <input type="text" name="q" placeholder="Search products by name, category, or supplier" value="{{ request.GET.q }}" class="search-input">
+        <button type="submit" class="search-btn">Search</button>
+    </form>
+</div>
+
+<!-- Add Product Button -->
+<div class="product-header">
+    <a href="{% url 'product_create' %}" class="btn">Add Product</a>
+</div>
+
+<!-- Product Cards -->
+<div class="product-cards">
+    {% if products %}
+        {% for product in products %}
+        <div class="product-card">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+            {% else %}
+            <img src="{% static 'images/default-product.png' %}" alt="Default Image" class="product-image">
+            {% endif %}
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.description }}</p>
+            <p>Price: ${{ product.price }}</p>
+            <a href="{% url 'product_detail' product.pk %}" class="btn">View Details</a>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No products found.</p>
+    {% endif %}
+</div>
+{% endblock %}

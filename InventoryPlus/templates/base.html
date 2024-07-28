@@ -1,0 +1,37 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Project{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header>
+        <h1>My Project</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'product_list' %}">Products</a></li>
+                <li><a href="{% url 'category_list' %}">Categories</a></li>
+                <li><a href="{% url 'supplier_list' %}">Suppliers</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        <!-- Main content goes here -->
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2024 My Project. All rights reserved.</p>
+    </footer>
+    
+    <script src="{% static 'js/script.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

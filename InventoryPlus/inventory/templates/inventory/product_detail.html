@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="product-detail-card">
+    <!-- Product Image -->
+    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+
+    <h1>{{ product.name }}</h1>
+    <p class="product-description">{{ product.description }}</p>
+    <p class="product-price">Price: ${{ product.price }}</p>
+    <p class="product-category">Category: {{ product.category.name }}</p>
+    <p class="product-suppliers">Suppliers: 
+        {% for supplier in product.suppliers.all %}
+            {{ supplier.name }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </p>
+
+    <h2>Stock Entries</h2>
+    <ul class="stock-list">
+        {% for stock in stock_entries %}
+        <li>{{ stock.quantity }} units (Last updated: {{ stock.date_updated }})</li>
+        {% empty %}
+        <li>No stock entries available.</li>
+        {% endfor %}
+    </ul>
+
+    <div class="product-actions">
+        <a class="btn btn-success" href="{% url 'stock_update' pk=product.pk %}">Update Stock</a>
+        <a class="btn btn-info" href="{% url 'product_edit' pk=product.pk %}">Edit Product</a>
+        <form method="POST" action="{% url 'product_delete' pk=product.pk %}" class="delete-form">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete Product</button>
+        </form>
+        <a class="btn btn-secondary" href="{% url 'product_list' %}">Back to Product List</a>
+    </div>
+</div>
+{% endblock %}

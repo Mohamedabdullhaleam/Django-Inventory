@@ -1,0 +1,18 @@
+<!-- inventory/templates/suppliers/supplier_list.html -->
+{% extends "base.html" %}
+{% block content %}
+<h1>Supplier List</h1>
+<a href="{% url 'supplier_create' %}" class="btn btn-primary">Add Supplier</a>
+<ul>
+    {% for supplier in suppliers %}
+    <li>
+        <a href="{% url 'supplier_detail' supplier.pk %}">{{ supplier.name }}</a>
+        <a href="{% url 'supplier_edit' supplier.pk %}" class="btn btn-info">Edit</a>
+        <form method="POST" action="{% url 'supplier_delete' supplier.pk %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
