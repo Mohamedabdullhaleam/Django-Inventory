@@ -25,6 +25,7 @@ urlpatterns = [
     path('suppliers/<int:pk>/edit/', views.supplier_edit, name='supplier_edit'),
     path('suppliers/<int:pk>/delete/', views.supplier_delete, name='supplier_delete'),
     path('suppliers/<int:pk>/', views.supplier_detail, name='supplier_detail'),
+     path('supplier/<int:supplier_id>/inventory/', views.supplier_inventory, name='supplier_inventory'),
 
     # Stock URLs
     path('stock/<int:pk>/update/', views.stock_update, name='stock_update'),

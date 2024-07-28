@@ -1,0 +1,31 @@
+<!-- inventory/templates/inventory/supplier_inventory.html -->
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<h1>Inventory for {{ supplier.name }}</h1>
+<a href="{% url 'supplier_list' %}" class="btn btn-secondary">Back to Suppliers</a>
+<div class="supplier-details">
+    <p><strong>Contact Information:</strong> {{ supplier.contact_information }}</p>
+    <p><strong>Email:</strong> {{ supplier.email }}</p>
+    <p><strong>Website:</strong> <a href="{{ supplier.website }}">{{ supplier.website }}</a></p>
+    <p><strong>Phone Number:</strong> {{ supplier.phone_number }}</p>
+</div>
+<h3>Products</h3>
+<div class="product-cards">
+    {% if products %}
+        {% for product in products %}
+        <div class="product-card">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+            {% else %}
+            <img src="{% static 'images/default-product.png' %}" alt="Default Image" class="product-image">
+            {% endif %}
+            <h4>{{ product.name }}</h4>
+            <p>Stock Level: {{ product.get_stock_level }}</p>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No products found for this supplier.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -126,6 +126,11 @@ def supplier_detail(request, pk):
     supplier = get_object_or_404(Supplier, pk=pk)
     products = supplier.products.all()
     return render(request, 'inventory/supplier_detail.html', {'supplier': supplier, 'products': products})
+
+def supplier_inventory(request, supplier_id):
+    supplier = get_object_or_404(Supplier, pk=supplier_id)
+    products = Product.objects.filter(suppliers=supplier)
+    return render(request, 'inventory/supplier_inventory.html', {'supplier': supplier, 'products': products})
 # Stock Views
 def stock_update(request, pk):
     product = get_object_or_404(Product, pk=pk)
