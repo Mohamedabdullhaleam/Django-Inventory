@@ -6,7 +6,33 @@
 <h2>Add/Edit Product</h2>
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn">Save</button>
+    <table>
+        <tr>
+            <th>Name</th>
+            <td>{{ form.name }}</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>{{ form.description }}</td>
+        </tr>
+        <tr>
+            <th>Price</th>
+            <td>{{ form.price }}</td>
+        </tr>
+        <tr>
+            <th>Category</th>
+            <td>{{ form.category }}</td>
+        </tr>
+        <tr>
+            <th>Suppliers</th>
+            <td>{{ form.suppliers }}</td>
+        </tr>
+        <tr>
+            <th>Image</th>
+            <td>{{ form.image }}</td>
+        </tr>
+    </table>
+    <br></br>
+    <button type="submit" class="save-btn">Save</button>
 </form>
 {% endblock %}

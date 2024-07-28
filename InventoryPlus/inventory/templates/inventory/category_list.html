@@ -1,17 +1,33 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Category List</h1>
-<a href="{% url 'category_create' %}">Add New Category</a>
-<ul>
-    {% for category in categories %}
-    <li>
-        {{ category.name }}
-        <a href="{% url 'category_edit' pk=category.pk %}">Edit</a>
-        <a href="{% url 'category_delete' pk=category.pk %}">Delete</a>
-    </li>
-    {% empty %}
-    <li>No categories found.</li>
-    {% endfor %}
-</ul>
+<h2>Category List</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for category in categories %}
+        <tr>
+            <td>{{ category.name }}</td>
+            <td>
+                <div style="display: flex; gap: 5px;">
+                    <a href="{% url 'category_edit' pk=category.pk %}" style="background-color:#007bff; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">Edit</a>
+                    <a href="{% url 'category_delete' pk=category.pk %}" style="background-color: red; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">Delete</a>
+                </div>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">No categories found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<br></br>
+<a href="{% url 'category_create' %}" style="background-color: green; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">Add New Category</a>
+
 {% endblock %}
