@@ -3,36 +3,94 @@
 {% block title %}Add/Edit Product{% endblock %}
 
 {% block content %}
-<h2>Add/Edit Product</h2>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <table>
-        <tr>
-            <th>Name</th>
-            <td>{{ form.name }}</td>
-        </tr>
-        <tr>
-            <th>Description</th>
-            <td>{{ form.description }}</td>
-        </tr>
-        <tr>
-            <th>Price</th>
-            <td>{{ form.price }}</td>
-        </tr>
-        <tr>
-            <th>Category</th>
-            <td>{{ form.category }}</td>
-        </tr>
-        <tr>
-            <th>Suppliers</th>
-            <td>{{ form.suppliers }}</td>
-        </tr>
-        <tr>
-            <th>Image</th>
-            <td>{{ form.image }}</td>
-        </tr>
-    </table>
-    <br></br>
-    <button type="submit" class="save-btn">Save</button>
-</form>
+<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px;">
+    <div style="max-width: 800px; width: 100%; background: #f9f9f9; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h2>Add/Edit Product</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td>
+                        <div style="margin-bottom: 15px;">
+                            <label for="{{ form.name.id_for_label }}" style="display: block; margin-bottom: 3px; font-weight: bold; font-size: 14px;">Name:</label>
+                            <input type="text" id="{{ form.name.id_for_label }}" name="{{ form.name.html_name }}" value="{% if form.instance.pk %}{{ form.name.value }}{% else %}{% endif %}" style="width: 100%; padding: 6px; border: 1px solid #ddd; border-radius: 3px; font-size: 14px;">
+                            {{ form.name.errors }}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="margin-bottom: 15px;">
+                            <label for="{{ form.description.id_for_label }}" style="display: block; margin-bottom: 3px; font-weight: bold; font-size: 14px;">Description:</label>
+                            <textarea id="{{ form.description.id_for_label }}" name="{{ form.description.html_name }}" style="width: 100%; padding: 6px; border: 1px solid #ddd; border-radius: 3px; font-size: 14px; height: 60px;">{% if form.instance.pk %}{{ form.description.value }}{% else %}{% endif %}</textarea>
+                            {{ form.description.errors }}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="margin-bottom: 15px;">
+                            <label for="{{ form.price.id_for_label }}" style="display: block; margin-bottom: 3px; font-weight: bold; font-size: 14px;">Price:</label>
+                            <input type="number" id="{{ form.price.id_for_label }}" name="{{ form.price.html_name }}" value="{% if form.instance.pk %}{{ form.price.value }}{% else %}{% endif %}" style="width: 100%; padding: 6px; border: 1px solid #ddd; border-radius: 3px; font-size: 14px;">
+                            {{ form.price.errors }}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="margin-bottom: 15px;">
+                            <label for="{{ form.category.id_for_label }}" style="display: block; margin-bottom: 3px; font-weight: bold; font-size: 14px;">Category:</label>
+                            <select id="{{ form.category.id_for_label }}" name="{{ form.category.html_name }}" style="width: 100%; padding: 6px; border: 1px solid #ddd; border-radius: 3px; font-size: 14px;">
+                                {% for option in form.category.field.queryset %}
+                                    {% if option.id %}
+                                        <option value="{{ option.id }}" {% if option.id == form.category.value %}selected{% endif %}>{{ option }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            {{ form.category.errors }}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="margin-bottom: 15px;">
+                            <label for="{{ form.suppliers.id_for_label }}" style="display: block; margin-bottom: 3px; font-weight: bold; font-size: 14px;">Suppliers:</label>
+                            <select id="{{ form.suppliers.id_for_label }}" name="{{ form.suppliers.html_name }}" style="width: 100%; padding: 6px; border: 1px solid #ddd; border-radius: 3px; font-size: 14px;">
+                                {% for option in form.suppliers.field.queryset %}
+                                    {% if option.id %}
+                                        <option value="{{ option.id }}" {% if option.id == form.suppliers.value %}selected{% endif %}>{{ option }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            {{ form.suppliers.errors }}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="margin-bottom: 15px;">
+                            <label for="{{ form.image.id_for_label }}" style="display: block; margin-bottom: 3px; font-weight: bold; font-size: 14px;">Image:</label>
+                            <div style="display: flex; align-items: center; gap: 20px;">
+                                <div style="text-align: center;">
+                                    {% if form.instance.image %}
+                                        <div style="margin-bottom: 10px;">
+                                            <label style="display: block; margin-bottom: 5px;">Current Photo:</label>
+                                            <img src="{{ form.instance.image.url }}" alt="Current Image" style="max-width: 150px; max-height: 150px; height: auto; border-radius: 3px;">
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div style="flex-grow: 1;">
+                                    <input type="file" id="{{ form.image.id_for_label }}" name="{{ form.image.html_name }}" style="width: 100%; padding: 6px; border: 1px solid #ddd; border-radius: 3px; font-size: 14px;">
+                                    {{ form.image.errors }}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <button type="submit" class="save-btn" style="padding: 8px 16px; border: none; border-radius: 3px; background-color: #007bff; color: #fff; font-size: 14px; cursor: pointer;">Save</button>
+        </form>
+    </div>
+</div>
 {% endblock %}
