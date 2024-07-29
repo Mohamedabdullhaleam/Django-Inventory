@@ -1,14 +1,13 @@
 {% extends 'base.html' %}
 
 {% block title %}Add/Edit Supplier{% endblock %}
-
+    
 {% block content %}
 <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px;">
     <div style="max-width: 800px; width: 100%; background: #f9f9f9; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
         <h2>{{ form.instance.pk|yesno:"Edit Supplier,Add Supplier" }}</h2>
         <form method="post" enctype="multipart/form-data" id="supplierForm">
             {% csrf_token %}
-            <table style="width: 100%; border-collapse: collapse;">
                 <tbody>
                     {% for field in form %}
                     <tr>
@@ -37,7 +36,6 @@
                     </tr>
                     {% endfor %}
                 </tbody>
-            </table>
             <br>
             <button type="submit" class="save-btn" style="padding: 8px 16px; border: none; border-radius: 3px; background-color: #007bff; color: #fff; font-size: 14px; cursor: pointer;">
                 {{ form.instance.pk|yesno:"Save Changes,Add Supplier" }}

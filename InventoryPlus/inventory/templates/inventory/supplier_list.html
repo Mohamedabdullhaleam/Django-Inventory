@@ -1,27 +1,28 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %} 
+{% block content %}
 <h2>Supplier List</h2>
-<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px">
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; border: none;">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Actions</th>
+      <th style="border: none;">Name</th>
+      <th style="border: none;">Actions</th>
     </tr>
   </thead>
   <tbody>
     {% for supplier in suppliers %}
     <tr>
-      <td>
+      <td style="border: none;">
         <a
           href="{% url 'supplier_detail' supplier.pk %}"
           style="text-decoration: none; color: #007bff"
           >{{ supplier.name }}</a
         >
       </td>
-      <td>
+      <td style="border: none;">
         <div
           style="
             background-color: #007bff;
-            padding: 4px;
+            padding: 10px 15px; /* Adjusted padding */
             display: inline-block;
             border-radius: 5px;
             margin-right: 5px;
@@ -36,30 +37,40 @@
         </div>
 
         <div
-          style="
-            background-color: gray;
-            padding: 4px;
-            display: inline-block;
-            border-radius: 5px;
-            margin-right: 5px;
-          "
+        style="
+          background-color: gray;
+          padding: 10px 15px;
+          display: inline-block;
+          border-radius: 5px;
+          margin-right: 5px;
+        "
+      >
+        <a
+          href="{% url 'supplier_inventory' supplier.pk %}"
+          class="btn btn-hover"
+          style="color: white; text-decoration: none"
+          >View Inventory</a
         >
-          <a
-            href="{% url 'supplier_inventory' supplier.pk %}"
-            class="btn btn-hover"
-            style="color: white; text-decoration: none"
-            >View Inventory</a
-          >
-        </div>
-
-        <form
-          method="POST"
-          action="{% url 'supplier_delete' supplier.pk %}"
-          style="display: inline"
-        >
-          {% csrf_token %}
-          <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-        </form>
+      </div>
+      
+      <form
+        method="POST"
+        action="{% url 'supplier_delete' supplier.pk %}"
+        style="
+          display: inline;
+          background-color: rgb(184, 1, 1);
+          padding: 10px 15px;
+          border-radius: 5px;
+          margin-right: 5px;
+          display: inline-block;
+        "
+      >
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger btn-sm" style="color: white; border: none; background: none; padding: 0; margin: 0;">
+          Delete
+        </button>
+      </form>
+      
       </td>
     </tr>
     {% endfor %}
