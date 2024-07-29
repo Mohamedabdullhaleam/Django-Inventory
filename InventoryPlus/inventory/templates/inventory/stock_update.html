@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Update Stock for {{ product.name }}</h2>
+<form method="post" class="stock-update-form">
+    {% csrf_token %}
+    <div class="quantity-field">
+        <label for="{{ form.quantity.id_for_label }}">Quantity</label>
+        {{ form.quantity }}
+    </div>
+        {% for field in form %}
+            {% if field.name != 'quantity' %}
+                <tr>
+                    <th>{{ field.label_tag }}</th>
+                    <td>{{ field }}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    <div class="submit-button-container">
+        <button type="submit" class="btn btn-primary">Update Stock</button>
+    </div>
+</form>
+
+<div style="margin-top: 20px;">
+    <a href="{% url 'product_detail' product.pk %}" style="color: #007bff; text-decoration: none; font-size: 16px;">Back to Product Details
+</div>
+{% endblock %}

@@ -1,25 +1,36 @@
 {% extends "base.html" %}
 
+{% block title %}Stock Status{% endblock %}
 {% block content %}
-<h1>Stock Status</h1>
-<table>
-    <thead>
-        <tr>
-            <th>Product</th>
-            <th>Stock Level</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for product in products %}
-        <tr>
-            <td>{{ product.name }}</td>
-            <td>{{ product.get_stock_level }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="2">No stock status available.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="content-container">
+    <h2>Stock Status</h2>
+    <table class="stock-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Stock Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>
+                    {% if product.get_stock_level > 10 %}
+                    <span class="badge badge-success">In Stock</span>
+                    {% elif product.get_stock_level > 0 %}
+                    <span class="badge badge-warning">Low Stock</span>
+                    {% else %}
+                    <span class="badge badge-danger">Out of Stock</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div style="margin-top: 20px;">
+        <a href="{% url 'category_list' %}" style="color: #007bff; text-decoration: none; font-size: 16px;">Back to Category List</a>
+    </div>
+    
+</div>
 {% endblock %}

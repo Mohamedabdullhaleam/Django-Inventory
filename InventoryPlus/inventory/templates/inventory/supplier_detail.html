@@ -1,15 +1,44 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
-<h1>{{ supplier.name }}</h1>
-<img src="{{ supplier.logo.url }}" alt="{{ supplier.name }}">
-<p>Email: {{ supplier.email }}</p>
-<p>Website: <a href="{{ supplier.website }}" target="_blank">{{ supplier.website }}</a></p>
-<p>Phone: {{ supplier.phone_number }}</p>
-<h2>Products Supplied</h2>
-<ul>
-    {% for product in products %}
-    <li>{{ product.name }}</li>
-    {% endfor %}
-</ul>
-<a href="{% url 'supplier_list' %}" class="btn btn-secondary">Back to Supplier List</a>
+<div class="supplier-detail-card">
+    <h2>{{ supplier.name }}</h2>
+    <table class="supplier-info">
+        <tr>
+            <td><strong>Email:</strong></td>
+            <td>{{ supplier.email }}</td>
+        </tr>
+        <tr>
+            <td><strong>Website:</strong></td>
+            <td><a href="{{ supplier.website }}" target="_blank">{{ supplier.website }}</a></td>
+        </tr>
+        <tr>
+            <td><strong>Phone Number:</strong></td>
+            <td>{{ supplier.phone_number }}</td>
+        </tr>
+    </table>
+    <br>
+    <h3>Products</h3>
+    <div class="product-cards">
+        {% if products %}
+            {% for product in products %}
+            <div class="product-card">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                {% else %}
+                <img src="{% static 'images/default-product.png' %}" alt="Default Image" class="product-image">
+                {% endif %}
+                <h4 style="padding-left: 10px;">{{ product.name }}</h4>
+                <p>{{ product.description }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No products available for this supplier.</p>
+        {% endif %}
+    </div>
+    <div style="margin-top: 20px;">
+        <a href="{% url 'supplier_list' %}" style="color: #007bff; text-decoration: none; font-size: 16px;">Back to Supplier List</a>
+    </div>
+</div>
 {% endblock %}

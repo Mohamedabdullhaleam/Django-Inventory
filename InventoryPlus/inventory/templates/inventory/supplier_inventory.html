@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<h2>Inventory for {{ supplier.name }}</h2>
+<table class="supplier-details">
+    <tbody>
+        <tr>
+            <td><strong>Contact Information:</strong></td>
+            <td>{{ supplier.contact_information }}</td>
+        </tr>
+        <tr>
+            <td><strong>Email:</strong></td>
+            <td>{{ supplier.email }}</td>
+        </tr>
+        <tr>
+            <td><strong>Website:</strong></td>
+            <td><a href="{{ supplier.website }}">{{ supplier.website }}</a></td>
+        </tr>
+        <tr>
+            <td><strong>Phone Number:</strong></td>
+            <td>{{ supplier.phone_number }}</td>
+        </tr>
+    </tbody>
+</table>
+<br>
+
+<h3>Products</h3>
+<div class="product-cards">
+    {% if products %}
+        {% for product in products %}
+        <div class="product-card">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+            {% else %}
+            <img src="{% static 'images/default-product.png' %}" alt="Default Image" class="product-image">
+            {% endif %}
+            <h4>{{ product.name }}</h4>
+            <p>Stock Level: {{ product.get_stock_level }}</p>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No products found for this supplier.</p>
+    {% endif %}
+</div>
+
+
+<div style="margin-top: 20px;">
+    <a href="{% url 'supplier_list' %}" style="color: #007bff; text-decoration: none; font-size: 16px;">Back to Suppliers</a>
+</div>
+{% endblock %}

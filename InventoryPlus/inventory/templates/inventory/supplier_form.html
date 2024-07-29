@@ -1,9 +1,46 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+
+{% block title %}Add/Edit Supplier{% endblock %}
+    
 {% block content %}
-<h1>{{ form.instance.pk|yesno:"Edit Supplier,Add Supplier" }}</h1>
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Save Changes,Add Supplier" }}</button>
-</form>
+<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px;">
+    <div style="max-width: 800px; width: 100%; background: #f9f9f9; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h2>{{ form.instance.pk|yesno:"Edit Supplier,Add Supplier" }}</h2>
+        <form method="post" enctype="multipart/form-data" id="supplierForm">
+            {% csrf_token %}
+                <tbody>
+                    {% for field in form %}
+                    <tr>
+                        <td>
+                            <div style="margin-bottom: 20px;">
+                                <label for="{{ field.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">
+                                    {{ field.label }}:
+                                </label>
+                                {% if field.field.widget.input_type == 'file' %}
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        {% if form.instance.logo %}
+                                            <div style="margin-bottom: 10px;">
+                                                <img src="{{ form.instance.logo.url }}" alt="Current Logo" style="max-width: 100px; max-height: 100px; height: auto; border-radius: 3px;">
+                                            </div>
+                                        {% endif %}
+                                        <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 2px;">
+                                            {{ field }}
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <input type="{{ field.field.widget.input_type }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{% if form.instance.pk %}{{ field.value }}{% endif %}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 16px;">
+                                {% endif %}
+                                {{ field.errors }}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            <br>
+            <button type="submit" class="save-btn" style="padding: 8px 16px; border: none; border-radius: 3px; background-color: #007bff; color: #fff; font-size: 14px; cursor: pointer;">
+                {{ form.instance.pk|yesno:"Save Changes,Add Supplier" }}
+            </button>
+        </form>
+    </div>
+</div>
 {% endblock %}

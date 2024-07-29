@@ -8,7 +8,7 @@ class Category(models.Model):
 
 class Supplier(models.Model):
     name = models.CharField(max_length=100)
-    address= models.CharField(max_length=255, null=True, blank=True)
+    address = models.CharField(max_length=255, null=True, blank=True)
     logo = models.ImageField(upload_to='supplier_logos/', null=True, blank=True)
     email = models.EmailField(max_length=100, null=True, blank=True)
     website = models.URLField(max_length=200, null=True, blank=True)
@@ -30,6 +30,15 @@ class Product(models.Model):
 
     def get_stock_level(self):
         return self.stock_entries.aggregate(total_stock=models.Sum('quantity'))['total_stock'] or 0
+
+    def stock_status(self):
+        stock_level = self.get_stock_level()
+        if stock_level > 10:
+            return 'In Stock'
+        elif 1 <= stock_level <= 10:
+            return 'Low Stock'
+        else:
+            return 'Out of Stock'
 
 class Stock(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='stock_entries')
