@@ -565,5 +565,16 @@ tr:nth-child(even) {
 }
 
 
+.site-title {
+  font-family: 'Roboto Slab', serif; /* Use the font you imported */
+  font-size: 2.5rem; /* Adjust the size as needed */
+  font-weight: 500; /* Use a bold weight */
+  color: #FFD700; 
+  text-decoration: none;
+}
 
 
+header {
+  text-align: center; 
+  padding: 10px; 
+}

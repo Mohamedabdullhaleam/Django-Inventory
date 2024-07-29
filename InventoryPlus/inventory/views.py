@@ -2,6 +2,11 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .models import Product, Category, Supplier, Stock
 from .forms import ProductForm, CategoryForm, SupplierForm, StockForm, StockUpdateForm
 
+# Dashboard
+def dashboard(request):
+    last_three_products = Product.objects.order_by('-id')[:3]
+    return render(request, 'inventory/dashboard.html', {'products': last_three_products})
+
 # Product Views
 def product_list(request):
     products = Product.objects.all()
