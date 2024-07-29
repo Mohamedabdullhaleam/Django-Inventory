@@ -29,7 +29,7 @@
                 {% else %}
                 <img src="{% static 'images/default-product.png' %}" alt="Default Image" class="product-image">
                 {% endif %}
-                <h4>{{ product.name }}</h4>
+                <h4 style="padding-left: 10px;">{{ product.name }}</h4>
                 <p>{{ product.description }}</p>
             </div>
             {% endfor %}
