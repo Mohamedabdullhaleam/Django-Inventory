@@ -57,52 +57,16 @@
           >
             {% csrf_token %}
           </form>
-          <button
-            type="button"
-            onclick="document.getElementById('delete-form-{{ supplier.pk }}').submit();"
-            style="
-              background-color: red;
-              color: white;
-              padding: 5px 10px;
-              text-decoration: none;
-              border-radius: 5px;
-              border: none;
-            "
-          >
+          <a href="{% url 'supplier_delete' supplier.pk %}" class="btn btn-danger" style="color: white; text-decoration: none; background-color: rgb(240, 13, 13); padding: 10px 15px; border-radius: 5px; display: inline-block; margin-right: 5px;">
             Delete
-          </button>
+          </a>
         </div>
-<<<<<<< HEAD
-
-        <div
-        style="
-          background-color: gray;
-          padding: 10px 15px;
-          display: inline-block;
-          border-radius: 5px;
-          margin-right: 5px;
-        "
-      >
-        <a
-          href="{% url 'supplier_inventory' supplier.pk %}"
-          class="btn btn-hover"
-          style="color: white; text-decoration: none"
-          >View Inventory</a
-        >
-      </div>
-      
-      <a href="{% url 'supplier_delete' supplier.pk %}" class="btn btn-danger" style="color: white; text-decoration: none; background-color: rgb(184, 1, 1); padding: 10px 15px; border-radius: 5px; display: inline-block; margin-right: 5px;">
-        Delete
-      </a>
-      
-=======
       </td>
     </tr>
     {% empty %}
     <tr>
       <td colspan="2" style="border: none; padding: 8px">
         No suppliers found.
->>>>>>> 2d3f07823467be6f0780ea3b1deb8d6f9ba3c472
       </td>
     </tr>
     {% endfor %}

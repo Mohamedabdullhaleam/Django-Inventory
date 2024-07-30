@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import Product, Category, Supplier, Stock
-from .forms import ProductForm, CategoryForm, SupplierForm, StockForm, StockUpdateForm
+from .forms import ProductForm, CategoryForm, SupplierForm, StockUpdateForm
 
 # Dashboard
 def dashboard(request):
@@ -141,20 +141,23 @@ def stock_update(request, pk):
     if request.method == 'POST':
         form = StockUpdateForm(request.POST)
         if form.is_valid():
-            stock_entry = form.save(commit=False)
-            stock_entry.product = product
-            stock_entry.save()
+            new_quantity = form.cleaned_data['quantity']
+            stock_entry, created = Stock.objects.get_or_create(
+                product=product,
+                defaults={'quantity': new_quantity}
+            )
+            if not created:
+                stock_entry.quantity = new_quantity
+                stock_entry.save()
             return redirect('product_detail', pk=product.pk)
     else:
         form = StockUpdateForm()
     return render(request, 'inventory/stock_update.html', {'form': form, 'product': product})
 
-# View to show stock status
 def stock_status(request):
     products = Product.objects.all()
     return render(request, 'inventory/stock_status.html', {'products': products})
 
-# View to generate stock reports
 def stock_report(request):
     products = Product.objects.all()
     return render(request, 'inventory/stock_report.html', {'products': products})

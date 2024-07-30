@@ -43,4 +43,7 @@ class StockUpdateForm(forms.ModelForm):
     class Meta:
         model = Stock
         fields = ['quantity']
+        widgets = {
+            'quantity': forms.NumberInput(attrs={'class': 'form-control'})
+        }
 
