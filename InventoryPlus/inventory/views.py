@@ -7,9 +7,9 @@ from .utils import send_low_stock_alert
 import pytz
 
 # Dashboard
-def dashboard(request):
+def home(request):
     last_three_products = Product.objects.order_by('-id')[:3]
-    return render(request, 'inventory/dashboard.html', {'products': last_three_products})
+    return render(request, 'inventory/home.html', {'products': last_three_products})
 
 # Bonus #import data
 def import_data(request):
@@ -29,52 +29,7 @@ def import_data(request):
             import_stock_from_csv(stock_csv)
         
         messages.success(request, 'Data imported successfully')
-        return redirect('product_list')
-    return render(request, 'inventory/import_data.html')
-
-def import_products_from_csv(file):
-    data = pd.read_csv(file)
-    for _, row in data.iterrows():
-        category, _ = Category.objects.get_or_create(name=row['category'])
-        suppliers = [Supplier.objects.get_or_create(name=s)[0] for s in row['suppliers'].split(';') if s]
-        product_data = {
-            'name': row['name'],
-            'description': row['description'],
-            'price': row['price'],
-            'category': category,
-            'suppliers': suppliers,
-            'image': row['image'] if pd.notna(row['image']) else None,
-        }
-        Product.objects.update_or_create(name=row['name'], defaults=product_data)
-
-def import_suppliers_from_csv(file):
-    data = pd.read_csv(file)
-    for _, row in data.iterrows():
-        Supplier.objects.update_or_create(
-            name=row['name'],
-            defaults={
-                'address': row['address'],
-                'logo': row['logo'] if pd.notna(row['logo']) else None,
-                'email': row['email'],
-                'website': row['website'],
-                'phone_number': row['phone_number']
-            }
-        )
-
-def import_categories_from_csv(file):
-    data = pd.read_csv(file)
-    for _, row in data.iterrows():
-        Category.objects.get_or_create(name=row['name'])
-
-def import_stock_from_csv(file):
-    data = pd.read_csv(file)
-    for _, row in data.iterrows():
-        product = Product.objects.get(name=row['product'])
-        Stock.objects.update_or_create(
-            product=product,
-            date_updated=row['date_updated'] if pd.notna(row['date_updated']) else None,
-            defaults={'quantity': row['quantity']}
-        )
+        return redirect('product_list')  
 
 def export_data(request):
     if request.GET.get('export', '') == 'all':
@@ -85,13 +40,11 @@ def make_tz_naive(series):
     return series.apply(lambda x: x.replace(tzinfo=None) if pd.notna(x) and hasattr(x, 'tzinfo') and x.tzinfo is not None else x)
 
 def export_all_data():
-    # Export Products
     products = Product.objects.all().values(
         'name', 'description', 'price', 'category__name', 'suppliers__name', 'image'
     )
     df_products = pd.DataFrame(list(products))
     
-    # Ensure proper handling of NaN values for suppliers and categories
     df_products['suppliers__name'] = df_products['suppliers__name'].apply(
         lambda x: ';'.join(x) if pd.notna(x) else ''
     )
@@ -103,35 +56,30 @@ def export_all_data():
     suppliers = Supplier.objects.all().values()
     df_suppliers = pd.DataFrame(list(suppliers))
 
-    # Export Categories
     categories = Category.objects.all().values()
     df_categories = pd.DataFrame(list(categories))
 
-    # Export Stock
     stock_entries = Stock.objects.all().values(
         'product__name', 'quantity', 'date_updated'
     )
     df_stock = pd.DataFrame(list(stock_entries))
     
-    # Make all datetime columns timezone-unaware
     df_stock['date_updated'] = make_tz_naive(df_stock['date_updated'])
 
-    # Create a CSV response
     response = HttpResponse(
         content_type='text/csv'
     )
     response['Content-Disposition'] = 'attachment; filename="exported_data.csv"'
 
-    # Create a CSV writer
     writer = pd.ExcelWriter(response, engine='xlsxwriter')
 
-    # Write each DataFrame to a separate sheet in the CSV
     df_products.to_csv(response, index=False, header=True)
     df_suppliers.to_csv(response, index=False, header=True)
     df_categories.to_csv(response, index=False, header=True)
     df_stock.to_csv(response, index=False, header=True)
 
     return response
+
 # Product Views
 def product_list(request):
     products = Product.objects.all()
