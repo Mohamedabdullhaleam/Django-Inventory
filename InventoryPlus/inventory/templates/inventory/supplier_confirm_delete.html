@@ -1,10 +1,14 @@
 {% extends "base.html" %}
+
 {% block content %}
-<h1>Delete Supplier</h1>
-<p>Are you sure you want to delete "{{ supplier.name }}"?</p>
-<form method="POST">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Delete</button>
-    <a href="{% url 'supplier_list' %}" class="btn btn-secondary">Cancel</a>
-</form>
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;">
+    <div>
+        <h1>Are you sure you want to delete "{{ supplier.name }}"?</h1>
+        <form method="POST" style="margin-top: 20px;">
+            {% csrf_token %}
+            <button type="submit" style="background-color: green; color: white; padding: 10px 20px; border: none; cursor: pointer; margin-right: 10px;">Confirm</button>
+            <button type="button" onclick="window.location.href='{% url 'supplier_list' %}'" style="background-color: gray; color: white; padding: 10px 20px; border: none; cursor: pointer;">Cancel</button>
+        </form>
+    </div>
+</div>
 {% endblock %}

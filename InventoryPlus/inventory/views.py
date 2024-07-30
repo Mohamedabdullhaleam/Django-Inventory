@@ -40,7 +40,7 @@ def product_edit(request, pk):
 
 def product_delete(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    if request.method == 'POST':
+    if request.method == "POST":
         product.delete()
         return redirect('product_list')
     return render(request, 'inventory/product_confirm_delete.html', {'product': product})

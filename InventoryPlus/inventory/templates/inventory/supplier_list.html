@@ -53,23 +53,9 @@
         >
       </div>
       
-      <form
-        method="POST"
-        action="{% url 'supplier_delete' supplier.pk %}"
-        style="
-          display: inline;
-          background-color: rgb(184, 1, 1);
-          padding: 10px 15px;
-          border-radius: 5px;
-          margin-right: 5px;
-          display: inline-block;
-        "
-      >
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger btn-sm" style="color: white; border: none; background: none; padding: 0; margin: 0;">
-          Delete
-        </button>
-      </form>
+      <a href="{% url 'supplier_delete' supplier.pk %}" class="btn btn-danger" style="color: white; text-decoration: none; background-color: rgb(184, 1, 1); padding: 10px 15px; border-radius: 5px; display: inline-block; margin-right: 5px;">
+        Delete
+      </a>
       
       </td>
     </tr>

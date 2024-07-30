@@ -1,4 +1,3 @@
-<!-- inventory/templates/inventory/product_detail.html -->
 {% extends "base.html" %}
 
 {% block content %}
@@ -38,12 +37,9 @@
     {% endif %}
 
     <div class="product-actions">
-        <a class="btn btn-success"style="margin-left: 10px;" href="{% url 'stock_update' pk=product.pk %}">Update Stock</a>
-        <a class="btn btn-info"style="margin-left: 10px;" href="{% url 'product_edit' pk=product.pk %}">Edit Product</a>
-        <form method="POST" action="{% url 'product_delete' pk=product.pk %}" class="delete-form" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Delete Product</button>
-        </form>
+        <a class="btn btn-success" style="margin-right: 10px;" href="{% url 'stock_update' pk=product.pk %}">Update Stock</a>
+        <a class="btn btn-info" style="margin-right: 10px;" href="{% url 'product_edit' pk=product.pk %}">Edit Product</a>
+        <a class="btn btn-danger" style="margin-right: 10px;" href="{% url 'product_delete' pk=product.pk %}">Delete Product</a>
     </div>
 </div>
 {% endblock %}
