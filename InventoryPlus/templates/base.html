@@ -10,7 +10,6 @@
     {% block extra_css %}{% endblock %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap">
-
 </head>
 <body>
     <header>
@@ -27,6 +26,7 @@
                         <a href="{% url 'stock_report' %}">Stock Reports</a>
                     </div>
                 </li>
+                <li><a href="{% url 'export_data' %}?export=all">Export Data</a></li>
             </ul>
         </nav>
     </header>
@@ -38,7 +38,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2024 Inventory + . All rights reserved.</p>
+        <p>&copy; 2024 Inventory +. All rights reserved.</p>
     </footer>
     
     {% block extra_js %}{% endblock %}

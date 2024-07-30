@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Import Data</h1>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h3>Import Products</h3>
+    <input type="file" name="product_file" />
+    <h3>Import Suppliers</h3>
+    <input type="file" name="supplier_file" />
+    <h3>Import Categories</h3>
+    <input type="file" name="category_file" />
+    <h3>Import Stock</h3>
+    <input type="file" name="stock_file" />
+    <button type="submit">Import</button>
+</form>
+{% endblock %}
+

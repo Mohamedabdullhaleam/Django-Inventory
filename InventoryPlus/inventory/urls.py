@@ -33,7 +33,12 @@ urlpatterns = [
     path('stock/<int:pk>/update/', views.stock_update, name='stock_update'),  
     path('stock/status/', views.stock_status, name='stock_status'),  
     path('stock/report/', views.stock_report, name='stock_report'),  
+
+    #Bonus #Import export data
+    path('import-data/', views.import_data, name='import_data'),
+    path('export-data/', views.export_data, name='export_data'),
 ]
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
