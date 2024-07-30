@@ -3,7 +3,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse
 from .models import Product, Category, Supplier, Stock
 from .forms import ProductForm, CategoryForm, SupplierForm, StockUpdateForm
-from .utils import send_low_stock_alert
+from .utils import send_low_stock_alert, import_products_from_csv, import_suppliers_from_csv, import_categories_from_csv, import_stock_from_csv
+from django.contrib import messages
 import pytz
 
 # Dashboard
@@ -29,7 +30,8 @@ def import_data(request):
             import_stock_from_csv(stock_csv)
         
         messages.success(request, 'Data imported successfully')
-        return redirect('product_list')  
+        return redirect('product_list')
+    return render(request, 'inventory/import_data.html')
 
 def export_data(request):
     if request.GET.get('export', '') == 'all':

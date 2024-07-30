@@ -578,3 +578,61 @@ header {
   text-align: center; 
   padding: 10px; 
 }
+
+.import-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.import-form {
+  max-width: 800px;
+  width: 100%;
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.import-title {
+  margin-bottom: 20px;
+  font-size: 2em;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 3px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #555;
+}
+
+.form-input {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 14px;
+}
+
+.import-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 3px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.import-btn:hover {
+  background-color: #0056b3;
+}
