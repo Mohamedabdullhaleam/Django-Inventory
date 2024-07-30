@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import Product, Category, Supplier, Stock
 from .forms import ProductForm, CategoryForm, SupplierForm, StockUpdateForm
-
+from .utils import send_low_stock_alert
 # Dashboard
 def dashboard(request):
     last_three_products = Product.objects.order_by('-id')[:3]
@@ -135,7 +135,7 @@ def supplier_inventory(request, supplier_id):
     products = Product.objects.filter(suppliers=supplier)
     return render(request, 'inventory/supplier_inventory.html', {'supplier': supplier, 'products': products})
 
-# Stock Views
+#Stock Views
 def stock_update(request, pk):
     product = get_object_or_404(Product, pk=pk)
     if request.method == 'POST':
@@ -149,6 +149,10 @@ def stock_update(request, pk):
             if not created:
                 stock_entry.quantity = new_quantity
                 stock_entry.save()
+
+            if product.stock_status() == "Low Stock": 
+                send_low_stock_alert(product.name, product.get_stock_level(), 'mohamedlimo236@gmail.com')
+            
             return redirect('product_detail', pk=product.pk)
     else:
         form = StockUpdateForm()
