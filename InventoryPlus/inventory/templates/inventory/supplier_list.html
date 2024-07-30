@@ -1,40 +1,78 @@
-{% extends "base.html" %} 
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <h2>Supplier List</h2>
-<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; border: none;">
+<table
+  style="
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border: none;
+  "
+>
   <thead>
     <tr>
-      <th style="border: none;">Name</th>
-      <th style="border: none;">Actions</th>
+      <th style="border: none; padding: 8px; width: 50%">Name</th>
+      <th style="border: none; padding: 8px; width: 50%">Actions</th>
     </tr>
   </thead>
   <tbody>
     {% for supplier in suppliers %}
-    <tr>
-      <td style="border: none;">
+    <tr style="border-bottom: 1px solid #ddd">
+      <td style="border: none; padding: 8px; padding-right: 5px">
         <a
           href="{% url 'supplier_detail' supplier.pk %}"
           style="text-decoration: none; color: #007bff"
-          >{{ supplier.name }}</a
         >
+          {{ supplier.name }}
+        </a>
       </td>
-      <td style="border: none;">
-        <div
-          style="
-            background-color: #007bff;
-            padding: 10px 15px; /* Adjusted padding */
-            display: inline-block;
-            border-radius: 5px;
-            margin-right: 5px;
-          "
-        >
+      <td style="border: none; padding: 8px">
+        <div style="display: flex; gap: 10px; justify-content: flex-start">
           <a
             href="{% url 'supplier_edit' supplier.pk %}"
-            class="btn"
-            style="color: white; text-decoration: none"
+            style="
+              background-color: #007bff;
+              color: white;
+              padding: 5px 10px;
+              text-decoration: none;
+              border-radius: 5px;
+            "
             >Edit</a
           >
+          <a
+            href="{% url 'supplier_inventory' supplier.pk %}"
+            style="
+              background-color: gray;
+              color: white;
+              padding: 5px 10px;
+              text-decoration: none;
+              border-radius: 5px;
+            "
+            >View Inventory</a
+          >
+          <form
+            id="delete-form-{{ supplier.pk }}"
+            method="POST"
+            action="{% url 'supplier_delete' supplier.pk %}"
+            style="display: none"
+          >
+            {% csrf_token %}
+          </form>
+          <button
+            type="button"
+            onclick="document.getElementById('delete-form-{{ supplier.pk }}').submit();"
+            style="
+              background-color: red;
+              color: white;
+              padding: 5px 10px;
+              text-decoration: none;
+              border-radius: 5px;
+              border: none;
+            "
+          >
+            Delete
+          </button>
         </div>
+<<<<<<< HEAD
 
         <div
         style="
@@ -57,6 +95,14 @@
         Delete
       </a>
       
+=======
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="2" style="border: none; padding: 8px">
+        No suppliers found.
+>>>>>>> 2d3f07823467be6f0780ea3b1deb8d6f9ba3c472
       </td>
     </tr>
     {% endfor %}

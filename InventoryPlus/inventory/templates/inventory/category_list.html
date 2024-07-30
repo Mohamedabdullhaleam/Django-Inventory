@@ -2,11 +2,11 @@
 
 {% block content %}
 <h2>Category List</h2>
-<table style="border-collapse: collapse; width: 100%;">
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; border: none;">
     <thead>
         <tr>
-            <th style="border: none; padding: 8px;">Name</th>
-            <th style="border: none; padding: 8px;">Actions</th>
+            <th style="border: none; padding: 8px; width: 50%;">Name</th>
+            <th style="border: none; padding: 8px; width: 50%;">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -14,7 +14,7 @@
         <tr style="border-bottom: 1px solid #ddd;">
             <td style="border: none; padding: 8px;">{{ category.name }}</td>
             <td style="border: none; padding: 8px;">
-                <div style="display: flex; gap: 5px;">
+                <div style="display: flex; gap: 10px;">
                     <a href="{% url 'category_edit' pk=category.pk %}" style="background-color:#007bff; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">Edit</a>
                     <a href="{% url 'category_delete' pk=category.pk %}" style="background-color: red; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">Delete</a>
                 </div>
@@ -27,7 +27,6 @@
         {% endfor %}
     </tbody>
 </table>
-<br></br>
 <a href="{% url 'category_create' %}" style="background-color: green; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">Add New Category</a>
 
 {% endblock %}
