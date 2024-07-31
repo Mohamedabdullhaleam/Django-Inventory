@@ -1,8 +1,22 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
+{% block title %}Inventory Status Report{% endblock %}
 
 {% block content %}
 <h2>Inventory Status Report</h2>
+
 <div>
-    {{ inventory_chart|safe }}
+    <h3>Total Quantity per Product</h3>
+    <div>{{ inventory_chart_quantity|safe }}</div>
+</div>
+
+<div>
+    <h3>Total Value per Product</h3>
+    <div>{{ inventory_chart_value|safe }}</div>
+</div>
+
+<div>
+    <h3>Quantity Distribution by Category</h3>
+    <div>{{ inventory_chart_category|safe }}</div>
 </div>
 {% endblock %}

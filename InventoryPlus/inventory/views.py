@@ -2,15 +2,15 @@ import pandas as pd
 import plotly.express as px
 import plotly.io as pio
 from django.utils import timezone
-from django.db.models import Sum, Count, Avg
+from django.db.models import Sum, Count, Avg, F, FloatField
 from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse
 from .models import Product, Category, Supplier, Stock
 from .forms import ProductForm, CategoryForm, SupplierForm, StockUpdateForm
 from .utils import send_low_stock_alert, import_products_from_csv, import_suppliers_from_csv, import_categories_from_csv, import_stock_from_csv
 from django.contrib import messages
+import plotly.graph_objects as go
 import pytz
-
 
 # Home
 def home(request):
@@ -19,25 +19,88 @@ def home(request):
 
 #Reports
 def inventory_status_report(request):
-    stock_summary = Stock.objects.values('product__name').annotate(
-        total_quantity=Sum('quantity')
+    stock_summary = Stock.objects.values('product__name', 'product__category__name', 'product__price').annotate(
+        total_quantity=Sum('quantity'),
+        total_value=Sum(F('quantity') * F('product__price'), output_field=FloatField())
     ).order_by('product__name')
     
     df_stock = pd.DataFrame(list(stock_summary))
-    
-    fig = px.bar(
+
+    fig_quantity = px.bar(
         df_stock,
         x='product__name',
         y='total_quantity',
-        title='Inventory Status',
-        labels={'product__name': 'Product Name', 'total_quantity': 'Total Quantity'}
+        title='Inventory Status: Total Quantity per Product',
+        labels={'product__name': 'Product Name', 'total_quantity': 'Total Quantity'},
+        color='total_quantity',
+        color_continuous_scale='Viridis'
     )
-    inventory_chart = pio.to_html(fig, full_html=False)
+    fig_quantity.update_layout(
+        xaxis_title='Product Name',
+        yaxis_title='Total Quantity',
+        title_x=0.5,
+        title_font=dict(size=24, family='Roboto Slab', color='darkblue'),
+        xaxis_tickangle=-45,
+        xaxis=dict(tickfont=dict(size=12, color='darkred')),
+        yaxis=dict(tickfont=dict(size=12, color='darkred')),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(family='Arial', size=14, color='black')
+    )
     
-    return render(request, 'inventory/inventory_status_report.html', {'inventory_chart': inventory_chart})
+    fig_value = px.bar(
+        df_stock,
+        x='product__name',
+        y='total_value',
+        title='Inventory Status: Total Value per Product',
+        labels={'product__name': 'Product Name', 'total_value': 'Total Value ($)'},
+        color='total_value',
+        color_continuous_scale='Cividis'
+    )
+    fig_value.update_layout(
+        xaxis_title='Product Name',
+        yaxis_title='Total Value ($)',
+        title_x=0.5,
+        title_font=dict(size=24, family='Roboto Slab', color='darkblue'),
+        xaxis_tickangle=-45,
+        xaxis=dict(tickfont=dict(size=12, color='darkgreen')),
+        yaxis=dict(tickfont=dict(size=12, color='darkgreen')),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(family='Arial', size=14, color='black')
+    )
+    
+
+    category_summary = df_stock.groupby('product__category__name')['total_quantity'].sum().reset_index()
+    fig_category = px.pie(
+        category_summary,
+        names='product__category__name',
+        values='total_quantity',
+        title='Inventory Status: Quantity Distribution by Category',
+        labels={'product__category__name': 'Category', 'total_quantity': 'Total Quantity'},
+        color_discrete_sequence=px.colors.sequential.RdBu
+    )
+    fig_category.update_layout(
+        title_x=0.5,
+        title_font=dict(size=24, family='Roboto Slab', color='darkblue'),
+        legend=dict(font=dict(size=12, color='black')),
+        font=dict(family='Arial', size=14, color='black'),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)'
+    )
+    inventory_chart_category = pio.to_html(fig_category, full_html=False)
+    inventory_chart_quantity = pio.to_html(fig_quantity, full_html=False)
+    inventory_chart_value = pio.to_html(fig_value, full_html=False)
+    
+    
+    return render(request, 'inventory/inventory_status_report.html', {
+        'inventory_chart_category': inventory_chart_category,
+        'inventory_chart_quantity': inventory_chart_quantity,
+        'inventory_chart_value': inventory_chart_value,
+    })
+
 
 def supplier_performance_report(request):
-    # Aggregate supplier data
     supplier_summary = Supplier.objects.annotate(
         total_products=Count('products'),
         avg_price=Avg('products__price'),
@@ -47,8 +110,6 @@ def supplier_performance_report(request):
     
     # Convert to DataFrame
     df_suppliers = pd.DataFrame(list(supplier_summary))
-    
-    # Plotly Pie Chart for Total Products Supplied
     fig_products = px.pie(
         df_suppliers,
         names='name',
@@ -64,7 +125,6 @@ def supplier_performance_report(request):
     )
     supplier_chart_products = pio.to_html(fig_products, full_html=False)
 
-    # Plotly Bar Chart for Average Product Price
     fig_avg_price = px.bar(
         df_suppliers,
         x='name',
@@ -84,7 +144,6 @@ def supplier_performance_report(request):
     )
     supplier_chart_avg_price = pio.to_html(fig_avg_price, full_html=False)
 
-    # Plotly Bar Chart for Total Value of Products Supplied
     fig_total_value = px.bar(
         df_suppliers,
         x='name',
@@ -104,7 +163,6 @@ def supplier_performance_report(request):
     )
     supplier_chart_total_value = pio.to_html(fig_total_value, full_html=False)
 
-    # Plotly Bar Chart for Total Categories Supplied
     fig_total_categories = px.bar(
         df_suppliers,
         x='name',
