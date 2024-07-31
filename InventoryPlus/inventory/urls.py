@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+        
     # Dashboard
     path('', views.home, name='home'),
    
@@ -37,8 +38,10 @@ urlpatterns = [
     #Bonus #Import export data
     path('import-data/', views.import_data, name='import_data'),
     path('export-data/', views.export_data, name='export_data'),
+
+    #Reports
+    path('inventory-status-report/', views.inventory_status_report, name='inventory_status_report'),
+    path('supplier-performance-report/', views.supplier_performance_report, name='supplier_performance_report'),
 ]
-
-
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

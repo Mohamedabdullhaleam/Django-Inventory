@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Supplier Performance Report{% endblock %}
+
+{% block content %}
+<div class="chart-container">
+    <h2>Total Products Supplied</h2>
+    {{ supplier_chart_products|safe }}
+</div>
+
+<div class="chart-container">
+    <h2>Average Product Price per Supplier</h2>
+    {{ supplier_chart_avg_price|safe }}
+</div>
+
+<div class="chart-container">
+    <h2>Total Value of Products Supplied</h2>
+    {{ supplier_chart_total_value|safe }}
+</div>
+
+<div class="chart-container">
+    <h2>Total Categories Supplied by Each Supplier</h2>
+    {{ supplier_chart_total_categories|safe }}
+</div>
+
+{% endblock %}

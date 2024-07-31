@@ -1,4 +1,8 @@
 import pandas as pd
+import plotly.express as px
+import plotly.io as pio
+from django.utils import timezone
+from django.db.models import Sum, Count, Avg
 from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse
 from .models import Product, Category, Supplier, Stock
@@ -7,11 +11,125 @@ from .utils import send_low_stock_alert, import_products_from_csv, import_suppli
 from django.contrib import messages
 import pytz
 
-# Dashboard
+
+# Home
 def home(request):
     last_three_products = Product.objects.order_by('-id')[:3]
     return render(request, 'inventory/home.html', {'products': last_three_products})
 
+#Reports
+def inventory_status_report(request):
+    stock_summary = Stock.objects.values('product__name').annotate(
+        total_quantity=Sum('quantity')
+    ).order_by('product__name')
+    
+    df_stock = pd.DataFrame(list(stock_summary))
+    
+    fig = px.bar(
+        df_stock,
+        x='product__name',
+        y='total_quantity',
+        title='Inventory Status',
+        labels={'product__name': 'Product Name', 'total_quantity': 'Total Quantity'}
+    )
+    inventory_chart = pio.to_html(fig, full_html=False)
+    
+    return render(request, 'inventory/inventory_status_report.html', {'inventory_chart': inventory_chart})
+
+def supplier_performance_report(request):
+    # Aggregate supplier data
+    supplier_summary = Supplier.objects.annotate(
+        total_products=Count('products'),
+        avg_price=Avg('products__price'),
+        total_value=Sum('products__price'),
+        total_categories=Count('products__category', distinct=True)
+    ).values('name', 'total_products', 'avg_price', 'total_value', 'total_categories')
+    
+    # Convert to DataFrame
+    df_suppliers = pd.DataFrame(list(supplier_summary))
+    
+    # Plotly Pie Chart for Total Products Supplied
+    fig_products = px.pie(
+        df_suppliers,
+        names='name',
+        values='total_products',
+        title='Total Products Supplied by Each Supplier',
+        labels={'name': 'Supplier', 'total_products': 'Total Products Supplied'},
+        color_discrete_sequence=px.colors.sequential.RdBu
+    )
+    fig_products.update_traces(textinfo='percent+label')
+    fig_products.update_layout(
+        title={'font': {'size': 24}},
+        legend={'font': {'size': 14}}
+    )
+    supplier_chart_products = pio.to_html(fig_products, full_html=False)
+
+    # Plotly Bar Chart for Average Product Price
+    fig_avg_price = px.bar(
+        df_suppliers,
+        x='name',
+        y='avg_price',
+        title='Average Product Price per Supplier',
+        labels={'name': 'Supplier', 'avg_price': 'Average Product Price'},
+        color='avg_price',
+        color_continuous_scale=px.colors.sequential.Viridis
+    )
+    fig_avg_price.update_traces(texttemplate='%{y:.2f}', textposition='outside')
+    fig_avg_price.update_layout(
+        title={'font': {'size': 24}},
+        xaxis_title='Supplier',
+        yaxis_title='Average Product Price',
+        legend={'font': {'size': 14}},
+        uniformtext_minsize=8, uniformtext_mode='hide'
+    )
+    supplier_chart_avg_price = pio.to_html(fig_avg_price, full_html=False)
+
+    # Plotly Bar Chart for Total Value of Products Supplied
+    fig_total_value = px.bar(
+        df_suppliers,
+        x='name',
+        y='total_value',
+        title='Total Value of Products Supplied by Each Supplier',
+        labels={'name': 'Supplier', 'total_value': 'Total Value'},
+        color='total_value',
+        color_continuous_scale=px.colors.sequential.Magma
+    )
+    fig_total_value.update_traces(texttemplate='%{y:.2f}', textposition='outside')
+    fig_total_value.update_layout(
+        title={'font': {'size': 24}},
+        xaxis_title='Supplier',
+        yaxis_title='Total Value',
+        legend={'font': {'size': 14}},
+        uniformtext_minsize=8, uniformtext_mode='hide'
+    )
+    supplier_chart_total_value = pio.to_html(fig_total_value, full_html=False)
+
+    # Plotly Bar Chart for Total Categories Supplied
+    fig_total_categories = px.bar(
+        df_suppliers,
+        x='name',
+        y='total_categories',
+        title='Total Categories Supplied by Each Supplier',
+        labels={'name': 'Supplier', 'total_categories': 'Total Categories'},
+        color='total_categories',
+        color_continuous_scale=px.colors.sequential.Plasma
+    )
+    fig_total_categories.update_traces(texttemplate='%{y}', textposition='outside')
+    fig_total_categories.update_layout(
+        title={'font': {'size': 24}},
+        xaxis_title='Supplier',
+        yaxis_title='Total Categories',
+        legend={'font': {'size': 14}},
+        uniformtext_minsize=8, uniformtext_mode='hide'
+    )
+    supplier_chart_total_categories = pio.to_html(fig_total_categories, full_html=False)
+    
+    return render(request, 'inventory/supplier_performance_report.html', {
+        'supplier_chart_products': supplier_chart_products,
+        'supplier_chart_avg_price': supplier_chart_avg_price,
+        'supplier_chart_total_value': supplier_chart_total_value,
+        'supplier_chart_total_categories': supplier_chart_total_categories
+    })
 # Bonus #import data
 def import_data(request):
     if request.method == 'POST':
