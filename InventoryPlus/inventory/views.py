@@ -1,6 +1,7 @@
 import pandas as pd
 import plotly.express as px
 import plotly.io as pio
+import plotly.graph_objects as go
 from django.utils import timezone
 from django.db.models import Sum, Count, Avg, F, FloatField
 from django.shortcuts import get_object_or_404, redirect, render
@@ -9,7 +10,6 @@ from .models import Product, Category, Supplier, Stock
 from .forms import ProductForm, CategoryForm, SupplierForm, StockUpdateForm
 from .utils import send_low_stock_alert, import_products_from_csv, import_suppliers_from_csv, import_categories_from_csv, import_stock_from_csv
 from django.contrib import messages
-import plotly.graph_objects as go
 import pytz
 
 # Home
@@ -402,7 +402,7 @@ def stock_update(request, pk):
                 stock_entry.save()
 
             if product.stock_status() == "Low Stock":
-                send_low_stock_alert(product.name, product.get_stock_level(), 'mohamedlimo236@gmail.com')
+                send_low_stock_alert(product.name, product.get_stock_level(), 'Ghofranalsanosi@gmail.com')
             return redirect('product_detail', pk=product.pk)
     else:
         form = StockUpdateForm()
